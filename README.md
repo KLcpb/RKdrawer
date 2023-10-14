@@ -1,5 +1,5 @@
 # RKdrawer
---must be executed with config.txt file in the same folder\n
+--must be executed with config.txt file in the same folder. 
 config.txt file text:
 ```
 NUMBER;TIME;AX;AY;AZ;GX;GY;GZ
