@@ -49,14 +49,21 @@ except:
 
 for i in f.readlines():
     string = i.split(";")
-    try:
-        for k in range(len(data_format)):
-            if k == data_format.index("AZ") or k == data_format.index("AY") or k == data_format.index("AX"):
+    
+    for k in range(len(data_format)):
+        if k == data_format.index("AZ") or k == data_format.index("AY") or k == data_format.index("AX"):
+            try:
                 data[k].append(float(string[k]) * acc_mul)
-            else:
+            except Exception:
+                print("[X] invalid line detected -> ", i)
+                data[k].append(-1)
+        else:
+            try:
                 data[k].append(float(string[k]))
-    except Exception:
-       print("[X] invalid line detected -> ", i)
+            except Exception:
+                print("[X] invalid line detected -> ", i)
+                data[k].append(-1)
+    
 
 
 print("[V] data collected!")
