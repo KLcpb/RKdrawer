@@ -9,7 +9,7 @@ output_path = "./output"
 try:
     log_path = sys.argv[1]
 except Exception:
-    print("set as an adress to the log file as the first argument")
+    print("set as an adress to the log file as the first argument") #сделать замену некорректного значения -1 на среднее арифм соседей
 
 template = [0,0,0.3,1,1,1,1,1,1,1,0.1,-0.2,-0.2,-0.1] #template used for finding start loc
 
@@ -18,7 +18,6 @@ if not os.path.exists(output_path):
     print(f"[V] created output folder->{output_path}")
 
 f = open(log_path)
-
 
 data_format = []
 data = []
@@ -55,19 +54,17 @@ for i in f.readlines():
             try:
                 data[k].append(float(string[k]) * acc_mul)
             except Exception:
-                print("[X] invalid line detected -> ", i)
+                print("[!] invalid line detected -> ", i)
                 data[k].append(-1)
         else:
             try:
                 data[k].append(float(string[k]))
             except Exception:
-                print("[X] invalid line detected -> ", i)
+                print("[!] invalid line detected -> ", i)
                 data[k].append(-1)
-    
-
-
+print() 
 print("[V] data collected!")
-
+print()
 #----------------finding start moment-----
 s = data[data_format.index("AZ")]
 result = []
@@ -76,13 +73,25 @@ for i in range(len(s)):
     result.append(s[i] * template[i%len(template)])
 start_n = result.index(max(result))
 
-
-
 print(f"[V] start detected at {data[data_format.index('TIME')][start_n]} ms")
+
 for i in range(len(data_format)):
     data[i] = data[i][start_n - 20:]
 
-#-----------------------------------------
+#----------------replace -1 values
+for i in range(len(data_format)):
+    for k in range(len(data[i])):
+        left = 0
+        right = 0
+        it = k
+        if data[i][k] == -1:
+            left = data[i][k-1]
+            while data[i][it] == -1:
+                it+=1
+            right = data[i][it]
+            for j in range(k,it):
+                data[i][j] = left + (j-k) * (right- left)/len(range(k,it))
+                print(f"[!] replaced {left + (j-k) * (right- left)/len(range(k,it))} in {data[i][0]}")
 
 
 for i in range(len(data_format)):
@@ -104,7 +113,6 @@ for i in range(len(data_format)):
 
     sys.stdout.write(f"\r\r[.] processed -> {i*100/len(data_format)} %")
     sys.stdout.flush()
-
 
 sys.stdout.write(f"\r\r[V] processed -> 100 %")
 sys.stdout.flush()
