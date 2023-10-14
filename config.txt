@@ -1,0 +1,4 @@
+# write telemetry format here
+NUMBER;TIME;AX;AY;AZ;GX;GY;GZ
+resolution=high
+acceleration_multiplier=9.8
