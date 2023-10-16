@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import sys
 import os
+import math
 
 log_path = "./log.txt"
 config_path = "./config.txt"
@@ -22,6 +23,8 @@ f = open(log_path)
 data_format = []
 data = []
 resolution = 0
+temp = 0
+
 try:
     conf = open(config_path)
     for i in conf.readlines():
@@ -36,7 +39,9 @@ try:
             resolution = i[11:-1]
         elif i[0:23] == "acceleration_multiplier":
             acc_mul = float(i[24:]) #acc miultpltr
-
+        elif i[0:10] == "temperatur":
+            temp = float(i[12:])
+        
     print("[V] format grabbed from here -> ",config_path, data_format)
     print(f"[V] got acceleration multiplier -> {acc_mul}")
 except:
@@ -45,7 +50,6 @@ except:
     file.write("# write telemetry format here\nNUMBER;TIME;AX;AY;AZ;GX;GY;GZ\nresolution=high\nacceleration_multiplier=9.8") 
     file.close() 
     
-
 for i in f.readlines():
     string = i.split(";")
     
@@ -93,7 +97,7 @@ for i in range(len(data_format)):
                 data[i][j] = left + (j-k) * (right- left)/len(range(k,it))
                 print(f"[!] replaced {left + (j-k) * (right- left)/len(range(k,it))} in {data[i][0]}")
 
-
+#-----plotting-
 for i in range(len(data_format)):
     if data_format[i] == "TIME" or data_format[i] == "NUMBER":
         continue
@@ -114,5 +118,18 @@ for i in range(len(data_format)):
     sys.stdout.write(f"\r\r[.] processed -> {i*100/len(data_format)} %")
     sys.stdout.flush()
 
-sys.stdout.write(f"\r\r[V] processed -> 100 %")
+
+altitude =[]
+for i in range(len(data[data_format.index("BARO")])):
+    altitude.append((8.31*temp/9.81)*math.log(data[data_format.index("BARO")][0]/data[data_format.index("BARO")][i]))
+
+plt.gcf().set_size_inches(18, 10)
+plt.locator_params(axis='both', nbins=10) 
+plt.ylabel("ALT")
+plt.plot(data[1],altitude)
+plt.savefig(f"{output_path}/ALT.png",dpi=300)
+plt.cla()
+plt.clf()
+
+sys.stdout.write(f"\r\r[V] processing -> 100 %")
 sys.stdout.flush()
