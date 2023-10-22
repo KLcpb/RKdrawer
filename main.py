@@ -114,10 +114,15 @@ for i in range(len(data_format)):
     sys.stdout.write(f"\r\r[.] processed -> {round(i*100/len(data_format),1)} %")
     sys.stdout.flush()
 altitude = []
+<<<<<<< HEAD
 if baro_flag:
    
     for i in range(len(data[data_format.index("BARO")])):
         
+=======
+if baro_flag:  
+    for i in range(len(data[data_format.index("BARO")])):     
+>>>>>>> 74fba3d (git test)
         try:
             altitude.append((8.31*temp/9.81)*math.log(data[data_format.index('BARO')][0]/data[data_format.index('BARO')][i]))
         except Exception:
