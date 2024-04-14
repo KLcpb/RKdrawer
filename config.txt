@@ -1,4 +1,6 @@
 # write telemetry format here. conf test
-NUMBER;TIME;AX;AY;AZ;GX;GY;GZ
+# there are dedicated param names for NUMBER, TIME, and accelerations
+
+NUMBER;TIME;AX;AY;AZ;GX;GY;GZ;A;B;C;D
 resolution=high
 acceleration_multiplier=9.8
